@@ -112,9 +112,30 @@ export function GeminiCoachCard({ records, goals, recommendation }: GeminiCoachC
         </div>
       ) : (
         <div className="space-y-4 pt-2 border-t border-slate-700/80">
+          <div className="flex flex-wrap gap-1.5">
+            {[
+              'Why is this my largest source?',
+              'Explain my goal progress',
+              'Explain this what-if result',
+              'Why was this recommended?'
+            ].map((chip) => (
+              <button
+                key={chip}
+                onClick={() => {
+                  setCustomPrompt(chip);
+                  handleAskCoach(chip);
+                }}
+                className="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-full px-2.5 py-1 text-[10px] transition-colors"
+              >
+                {chip}
+              </button>
+            ))}
+          </div>
+
           <div className="flex space-x-2">
             <input
               type="text"
+              aria-label="Ask carbon coach a custom question"
               placeholder="Ask a question (e.g. Why is car highlighted?)"
               value={customPrompt}
               onChange={(e) => setCustomPrompt(e.target.value)}

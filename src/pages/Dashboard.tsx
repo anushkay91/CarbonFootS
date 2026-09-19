@@ -41,7 +41,10 @@ export default function DashboardPage() {
   if (records.length === 0) {
     return (
       <Layout>
-        <h1 className="text-3xl font-bold text-slate-950 mb-6">Dashboard</h1>
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Personal Carbon Dashboard</h1>
+          <p className="text-slate-600 text-sm mt-1">Review your estimated footprint, track reduction goals, and explore scenarios.</p>
+        </div>
         <EmptyState />
       </Layout>
     );
@@ -49,41 +52,53 @@ export default function DashboardPage() {
 
   return (
     <Layout>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 pb-4 border-b border-slate-200">
         <div>
-          <h1 className="text-3xl font-bold text-slate-950">Dashboard</h1>
-          <p className="text-slate-600 text-sm mt-1">Review your estimated footprint and tracking trends.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-950">Personal Carbon Dashboard</h1>
+          <p className="text-slate-600 text-sm mt-1">Estimated impact based on recorded transportation and electricity activities.</p>
         </div>
         <div className="mt-4 sm:mt-0">
           <PeriodSelector selectedDays={days} onSelectDays={setDays} />
         </div>
       </div>
 
-      <div className="space-y-6">
-        {/* Top metrics grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <FootprintSummaryCard totalCO2e={summary.totalCO2e} activityCount={summary.activityCount} />
-          <CoverageCard recordedDays={summary.coverageDays} periodDays={summary.periodDays} hasData={summary.hasData} />
-          <ComparisonCard comparison={summary.comparison} />
-          <LargestSourceCard largestSource={summary.largestReportedSource} categoryTotals={summary.categoryTotals} />
-        </div>
+      <div className="space-y-8">
+        {/* Zone 1: Overview & Hero Metrics */}
+        <section aria-labelledby="overview-heading" className="space-y-4">
+          <h2 id="overview-heading" className="text-xs font-bold uppercase tracking-wider text-slate-400">1. Current Footprint & Context</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <FootprintSummaryCard totalCO2e={summary.totalCO2e} activityCount={summary.activityCount} />
+            <CoverageCard recordedDays={summary.coverageDays} periodDays={summary.periodDays} hasData={summary.hasData} />
+            <ComparisonCard comparison={summary.comparison} />
+            <LargestSourceCard largestSource={summary.largestReportedSource} categoryTotals={summary.categoryTotals} />
+          </div>
+        </section>
 
-        {/* Active Goal Summary & Recommendation */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {activeGoal && (
-            <ActiveGoalSummaryCard goal={activeGoal} records={records} />
-          )}
-          <RecommendationCard recommendation={primaryRecommendation} records={records} activeGoal={activeGoal} />
-        </div>
+        {/* Zone 2: Understand (Categories & Trend) */}
+        <section aria-labelledby="understand-heading" className="space-y-4">
+          <h2 id="understand-heading" className="text-xs font-bold uppercase tracking-wider text-slate-400">2. Analytics & Trend Breakdown</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <CategoryBreakdownSection categoryDetails={summary.categoryDetails} totalCO2e={summary.totalCO2e} />
+            <DailyTrendSection dailyBreakdown={summary.dailyBreakdown} />
+          </div>
+        </section>
 
-        {/* Gemini AI Coach Card */}
-        <GeminiCoachCard records={records} goals={goals} recommendation={primaryRecommendation} />
+        {/* Zone 3: Act (Goals & Recommendations) */}
+        <section aria-labelledby="act-heading" className="space-y-4">
+          <h2 id="act-heading" className="text-xs font-bold uppercase tracking-wider text-slate-400">3. Goals & Evidence-Based Actions</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {activeGoal && (
+              <ActiveGoalSummaryCard goal={activeGoal} records={records} />
+            )}
+            <RecommendationCard recommendation={primaryRecommendation} records={records} activeGoal={activeGoal} />
+          </div>
+        </section>
 
-        {/* Detailed sections */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <CategoryBreakdownSection categoryDetails={summary.categoryDetails} totalCO2e={summary.totalCO2e} />
-          <DailyTrendSection dailyBreakdown={summary.dailyBreakdown} />
-        </div>
+        {/* Zone 4: Explore & Explain (Gemini Coach) */}
+        <section aria-labelledby="explore-heading" className="space-y-4">
+          <h2 id="explore-heading" className="text-xs font-bold uppercase tracking-wider text-slate-400">4. AI Explanation & Guidance</h2>
+          <GeminiCoachCard records={records} goals={goals} recommendation={primaryRecommendation} />
+        </section>
       </div>
     </Layout>
   );
