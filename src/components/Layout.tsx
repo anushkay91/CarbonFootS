@@ -8,6 +8,12 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 text-slate-900">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-sky-700 focus:shadow-md focus:m-4 focus:rounded-md focus:border focus:border-sky-300"
+      >
+        Skip to main content
+      </a>
       <header className="bg-white border-b border-slate-200">
         <nav aria-label="Main Navigation" className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link to="/" className="text-xl font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 rounded-md p-1">
