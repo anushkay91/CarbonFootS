@@ -2,19 +2,21 @@ import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import { GoalRepository } from '../services/GoalRepository';
 import { CarbonGoal } from '../types/domain';
+import { EMISSION_FACTORS } from '../data/emissionFactors';
 import { useNavigate, Link } from 'react-router-dom';
 
 export default function CreateGoalPage() {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
-  const [targetValue, setTargetValue] = useState<number>(2);
-  const [unit, setUnit] = useState('times');
+  const [targetValue, setTargetValue] = useState<number>(50);
+  const [unit, setUnit] = useState('km');
   const [cadence, setCadence] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
+  const [selectedFactorId, setSelectedFactorId] = useState<string>('trans-car-petrol');
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
   
-  // Default end date 7 days later
+  // Default end date 30 days later
   const defaultEnd = new Date();
-  defaultEnd.setDate(defaultEnd.getDate() + 7);
+  defaultEnd.setDate(defaultEnd.getDate() + 30);
   const [endDate, setEndDate] = useState(defaultEnd.toISOString().split('T')[0]);
 
   const [error, setError] = useState<string | null>(null);
@@ -34,18 +36,23 @@ export default function CreateGoalPage() {
       return;
     }
 
+    const factor = EMISSION_FACTORS[selectedFactorId];
+
     const now = new Date().toISOString();
     const newGoal: CarbonGoal = {
       id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2) + Date.now().toString(36),
-      actionId: 'custom-behavior',
+      actionId: 'activity-linked-reduction',
       title: title.trim(),
-      metric: 'count',
+      metric: 'distance',
       targetValue,
-      unit,
+      unit: factor ? (factor.category === 'Electricity' ? 'kWh' : 'km') : unit,
       cadence,
       startDate,
       endDate,
       status: 'active',
+      linkedCategory: factor?.category,
+      linkedActivityType: factor?.activity,
+      linkedFactorId: selectedFactorId,
       createdAt: now,
       updatedAt: now
     };
@@ -61,8 +68,8 @@ export default function CreateGoalPage() {
           <Link to="/goals" className="text-sm font-medium text-sky-600 hover:text-sky-700">
             &larr; Back to Goals
           </Link>
-          <h1 className="text-3xl font-bold text-slate-950 mt-2">Create Reduction Goal</h1>
-          <p className="text-sm text-slate-600">Define a real behavioral goal to track your carbon footprint actions.</p>
+          <h1 className="text-3xl font-bold text-slate-950 mt-2">Create Activity-Linked Goal</h1>
+          <p className="text-sm text-slate-600">Connect a reduction goal to real activity records for automated progress tracking.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
@@ -74,32 +81,55 @@ export default function CreateGoalPage() {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g., Use public transport or carpool"
+              placeholder="e.g., Limit car commuting to under 50km/week"
               required
               className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm"
             />
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-slate-700">Link to Activity Type</label>
+            <select
+              value={selectedFactorId}
+              onChange={(e) => {
+                const fid = e.target.value;
+                setSelectedFactorId(fid);
+                const f = EMISSION_FACTORS[fid];
+                if (f) {
+                  setUnit(f.category === 'Electricity' ? 'kWh' : 'km');
+                  setTitle(`Reduce ${f.activity}`);
+                }
+              }}
+              className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 shadow-sm bg-white focus:border-sky-500 focus:ring-sky-500 text-sm"
+            >
+              {Object.values(EMISSION_FACTORS).map(f => (
+                <option key={f.id} value={f.id}>
+                  {f.category} — {f.activity} ({f.unit})
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700">Target Value</label>
+              <label className="block text-sm font-medium text-slate-700">Target Maximum Limit</label>
               <input
                 type="number"
                 min="1"
+                step="any"
                 value={targetValue}
-                onChange={(e) => setTargetValue(parseInt(e.target.value) || 1)}
+                onChange={(e) => setTargetValue(parseFloat(e.target.value) || 1)}
                 required
                 className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700">Unit / Label</label>
+              <label className="block text-sm font-medium text-slate-700">Unit</label>
               <input
                 type="text"
                 value={unit}
-                onChange={(e) => setUnit(e.target.value)}
-                required
-                className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm"
+                disabled
+                className="mt-1 block w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-slate-500 text-sm cursor-not-allowed"
               />
             </div>
           </div>
@@ -145,7 +175,7 @@ export default function CreateGoalPage() {
               type="submit"
               className="flex-1 bg-sky-600 text-white py-2 px-4 rounded-md hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm font-medium shadow-sm"
             >
-              Create Goal
+              Create Goal & Link Activities
             </button>
             <Link
               to="/goals"

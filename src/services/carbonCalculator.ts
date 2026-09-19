@@ -27,7 +27,7 @@ export const CarbonCalculator = {
       category: 'Transportation',
       activityId: factor.id,
       factor,
-      assumptions: ['Calculated based on user-provided distance and category-level factor.'],
+      assumptions: ['Calculated based on user-provided distance and category-level passenger transport factor.'],
       dataQuality
     };
   },
@@ -50,32 +50,7 @@ export const CarbonCalculator = {
       category: 'Electricity',
       activityId: factor.id,
       factor,
-      assumptions: ['Calculated based on provided kWh and grid average factor.'],
-      dataQuality
-    };
-  },
-
-  calculateFood: (
-    frequencyPerMonth: number,
-    factorId: string,
-    dataQuality: DataQuality
-  ): CalculationResult => {
-    // For food, we assume frequency maps to quantity of servings per month
-    // Food emission factors would need to be kg CO2e per serving.
-    const factor = EMISSION_FACTORS[factorId];
-    if (!factor || factor.category !== 'Food') {
-      throw new Error(`Invalid or missing food emission factor: ${factorId}`);
-    }
-
-    const value = frequencyPerMonth * factor.value;
-
-    return {
-      value,
-      unit: 'kg CO2e',
-      category: 'Food',
-      activityId: factor.id,
-      factor,
-      assumptions: ['Calculated based on estimated monthly frequency and category-level factor per serving.'],
+      assumptions: ['Calculated based on provided kWh and IEA grid average emission factor.'],
       dataQuality
     };
   }

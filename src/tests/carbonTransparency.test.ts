@@ -9,7 +9,7 @@ describe('Carbon Factor Transparency & Methodology', () => {
     expect(result.factor).toBeDefined();
     expect(result.factor.id).toBe('trans-car-petrol');
     expect(result.factor.version).toBe('1.0.0');
-    expect(result.factor.source).toBe('Verified Govt Database');
+    expect(result.factor.source).toBe('UK Government GHG Conversion Factors for Company Reporting 2024');
     expect(result.value).toBe(50 * EMISSION_FACTORS['trans-car-petrol'].value);
     expect(result.assumptions.length).toBeGreaterThan(0);
     expect(result.dataQuality).toBe('High');

@@ -186,4 +186,45 @@ describe('TrackingSummaryEngine', () => {
     TrackingSummaryEngine.getSummary(sampleRecords, '2026-09-15', '2026-09-17');
     expect(sampleRecords).toEqual(recordsCopy);
   });
+
+  it('aggregates subcategories and category details correctly', () => {
+    const busRecord: ActivityRecord = {
+      id: 'bus-1',
+      occurredAt: '2026-09-15T12:00:00.000Z',
+      localDate: '2026-09-15',
+      category: 'Transportation',
+      activityType: 'Bus (Average Passenger)',
+      inputs: { distanceKm: 50 },
+      normalizedInputs: { distanceKm: 50 },
+      estimatedCO2e: 4.0, // 50 * 0.08
+      unit: 'kg CO2e',
+      emissionFactorId: 'trans-bus-avg',
+      emissionFactorVersion: '1.0.0',
+      dataQuality: 'High',
+      assumptions: [],
+      source: 'manual',
+      createdAt: '2026-09-15T12:00:00.000Z',
+      updatedAt: '2026-09-15T12:00:00.000Z'
+    };
+
+    const multiRecords = [...sampleRecords, busRecord];
+    const summary = TrackingSummaryEngine.getSummary(multiRecords, '2026-09-15', '2026-09-17');
+
+    // Transportation total: Car (1.5 + 3.0 = 4.5) + Bus (4.0) = 8.5
+    expect(summary.categoryTotals['Transportation']).toBe(8.5);
+    expect(summary.categoryTotals['Electricity']).toBe(2.25);
+
+    const transportDetail = summary.categoryDetails['Transportation'];
+    expect(transportDetail).toBeDefined();
+    expect(transportDetail.totalCO2e).toBe(8.5);
+    expect(transportDetail.activityCount).toBe(3); // 2 car + 1 bus
+    expect(transportDetail.subcategories.length).toBe(2);
+
+    const carSub = transportDetail.subcategories.find(s => s.activityType === 'Driving Car (Petrol)');
+    const busSub = transportDetail.subcategories.find(s => s.activityType === 'Bus (Average Passenger)');
+
+    expect(carSub?.totalCO2e).toBe(4.5);
+    expect(busSub?.totalCO2e).toBe(4.0);
+    expect(transportDetail.largestSubtype).toBe('Driving Car (Petrol)');
+  });
 });

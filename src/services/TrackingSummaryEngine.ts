@@ -1,4 +1,4 @@
-import { ActivityRecord, TrackingSummary, DailyDataItem, PeriodComparison, ComparabilityStatus } from '../types/domain';
+import { ActivityRecord, TrackingSummary, DailyDataItem, PeriodComparison, ComparabilityStatus, CategoryDetailSummary, SubcategorySummary } from '../types/domain';
 
 function parseDate(dateStr: string): Date {
   const parts = dateStr.split('-').map(Number);
@@ -192,6 +192,75 @@ export class TrackingSummaryEngine {
     };
   }
 
+  static getCategoryDetails(records: ActivityRecord[], start: string, end: string): Record<string, CategoryDetailSummary> {
+    const validRecords = TrackingSummaryEngine.getValidPeriodRecords(records, start, end);
+    let totalCO2e = 0;
+    validRecords.forEach(r => { totalCO2e += r.estimatedCO2e; });
+
+    // Group by category, then by activityType (subcategory)
+    const categoryMap = new Map<string, { total: number; count: number; subMap: Map<string, { total: number; count: number }> }>();
+
+    validRecords.forEach(r => {
+      let catEntry = categoryMap.get(r.category);
+      if (!catEntry) {
+        catEntry = { total: 0, count: 0, subMap: new Map() };
+        categoryMap.set(r.category, catEntry);
+      }
+      catEntry.total += r.estimatedCO2e;
+      catEntry.count += 1;
+
+      let subEntry = catEntry.subMap.get(r.activityType);
+      if (!subEntry) {
+        subEntry = { total: 0, count: 0 };
+        catEntry.subMap.set(r.activityType, subEntry);
+      }
+      subEntry.total += r.estimatedCO2e;
+      subEntry.count += 1;
+    });
+
+    const categoryDetails: Record<string, CategoryDetailSummary> = {};
+
+    categoryMap.forEach((catVal, category) => {
+      const shareOfTotal = totalCO2e > 0 ? Number(((catVal.total / totalCO2e) * 100).toFixed(2)) : 0;
+      
+      const subcategories: SubcategorySummary[] = [];
+      let maxSubTotal = -1;
+      let largestSubtype: string | undefined = undefined;
+
+      catVal.subMap.forEach((subVal, activityType) => {
+        const shareOfCategory = catVal.total > 0 ? Number(((subVal.total / catVal.total) * 100).toFixed(2)) : 0;
+        const shareOfTotalSub = totalCO2e > 0 ? Number(((subVal.total / totalCO2e) * 100).toFixed(2)) : 0;
+
+        if (subVal.total > maxSubTotal) {
+          maxSubTotal = subVal.total;
+          largestSubtype = activityType;
+        }
+
+        subcategories.push({
+          activityType,
+          totalCO2e: Number(subVal.total.toFixed(4)),
+          activityCount: subVal.count,
+          shareOfCategory,
+          shareOfTotal: shareOfTotalSub
+        });
+      });
+
+      // Sort subcategories descending by totalCO2e
+      subcategories.sort((a, b) => b.totalCO2e - a.totalCO2e);
+
+      categoryDetails[category] = {
+        category,
+        totalCO2e: Number(catVal.total.toFixed(4)),
+        activityCount: catVal.count,
+        shareOfTotal,
+        subcategories,
+        largestSubtype
+      };
+    });
+
+    return categoryDetails;
+  }
+
   static getSummary(
     records: ActivityRecord[],
     periodStart: string,
@@ -199,6 +268,7 @@ export class TrackingSummaryEngine {
   ): TrackingSummary {
     const validRecords = TrackingSummaryEngine.getValidPeriodRecords(records, periodStart, periodEnd);
     const categoryTotals = TrackingSummaryEngine.getCategoryTotals(records, periodStart, periodEnd);
+    const categoryDetails = TrackingSummaryEngine.getCategoryDetails(records, periodStart, periodEnd);
     
     let totalCO2e = 0;
     validRecords.forEach(r => {
@@ -210,6 +280,23 @@ export class TrackingSummaryEngine {
     const coverage = TrackingSummaryEngine.getCoverage(records, periodStart, periodEnd);
     const dailyBreakdown = TrackingSummaryEngine.getDailyBreakdown(records, periodStart, periodEnd);
     const largestReportedSource = TrackingSummaryEngine.getLargestReportedSource(records, periodStart, periodEnd);
+    
+    // Find largest subtype source globally
+    let largestSubtypeSource: { category: string; activityType: string; totalCO2e: number } | undefined = undefined;
+    let maxSubCo2 = -1;
+    Object.values(categoryDetails).forEach(cd => {
+      cd.subcategories.forEach(sub => {
+        if (sub.totalCO2e > maxSubCo2) {
+          maxSubCo2 = sub.totalCO2e;
+          largestSubtypeSource = {
+            category: cd.category,
+            activityType: sub.activityType,
+            totalCO2e: sub.totalCO2e
+          };
+        }
+      });
+    });
+
     const comparison = TrackingSummaryEngine.getComparison(records, periodStart, periodEnd);
     const prevRange = TrackingSummaryEngine.getPreviousPeriodRange(periodStart, periodEnd);
 
@@ -219,12 +306,14 @@ export class TrackingSummaryEngine {
       totalCO2e,
       activityCount: validRecords.length,
       categoryTotals,
+      categoryDetails,
       coverageDays: coverage.recordedDays,
       periodDays: coverage.periodDays,
       coverageRatio: coverage.coverageRatio,
       hasData: coverage.hasData,
       categoriesRecorded,
       largestReportedSource,
+      largestSubtypeSource,
       dailyBreakdown,
       comparison,
       previousPeriodStart: prevRange?.start,

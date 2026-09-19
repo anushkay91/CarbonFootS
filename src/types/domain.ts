@@ -47,6 +47,12 @@ export interface CarbonGoal {
   startDate: string;
   endDate: string;
   status: 'active' | 'completed' | 'skipped' | 'abandoned';
+  // Optional activity-linked properties for A5
+  linkedCategory?: string;
+  linkedActivityType?: string;
+  linkedFactorId?: string;
+  baselineValue?: number;
+  baselineCO2e?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -59,6 +65,23 @@ export interface GoalCheckIn {
   source: 'self-reported' | 'activity-derived';
   note?: string;
   createdAt: string;
+}
+
+export interface SubcategorySummary {
+  activityType: string;
+  totalCO2e: number;
+  activityCount: number;
+  shareOfCategory: number; // percentage 0-100
+  shareOfTotal: number; // percentage 0-100
+}
+
+export interface CategoryDetailSummary {
+  category: string;
+  totalCO2e: number;
+  activityCount: number;
+  shareOfTotal: number; // percentage 0-100
+  subcategories: SubcategorySummary[];
+  largestSubtype?: string;
 }
 
 export type ComparabilityStatus = 'comparable' | 'not-comparable' | 'no-previous-data';
@@ -84,12 +107,14 @@ export interface TrackingSummary {
   totalCO2e: number;
   activityCount: number;
   categoryTotals: Record<string, number>;
+  categoryDetails: Record<string, CategoryDetailSummary>;
   coverageDays: number;
   periodDays: number;
   coverageRatio: number;
   hasData: boolean;
   categoriesRecorded: string[];
   largestReportedSource?: string;
+  largestSubtypeSource?: { category: string; activityType: string; totalCO2e: number };
   dailyBreakdown: DailyDataItem[];
   comparison?: PeriodComparison;
   previousPeriodStart?: string;
