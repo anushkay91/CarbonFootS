@@ -1,5 +1,4 @@
 import React from 'react';
-import * as motion from "motion/react-client";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -33,15 +32,9 @@ export default function Layout({ children }: LayoutProps) {
         </nav>
       </header>
 
-      <motion.main 
-        id="main-content" 
-        className="flex-grow max-w-7xl mx-auto px-4 py-8 w-full"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-      >
+      <main id="main-content" className="flex-grow max-w-7xl mx-auto px-4 py-8 w-full">
         {children}
-      </motion.main>
+      </main>
 
       <footer className="bg-white border-t border-slate-200 py-6">
         <div className="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
