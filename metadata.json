@@ -1,0 +1,6 @@
+{
+  "name": "Carbon Footprint Tracker",
+  "description": "A production-quality application for estimating individual carbon footprint based on reported activity.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
