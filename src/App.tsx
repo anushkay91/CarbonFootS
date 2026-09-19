@@ -13,6 +13,7 @@ import EditActivityPage from './pages/EditActivityPage';
 import GoalsPage from './pages/GoalsPage';
 import CreateGoalPage from './pages/CreateGoalPage';
 import GoalDetailPage from './pages/GoalDetailPage';
+import MethodologyPage from './pages/MethodologyPage';
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
         <Route path="/goals" element={<GoalsPage />} />
         <Route path="/goals/new" element={<CreateGoalPage />} />
         <Route path="/goals/:id" element={<GoalDetailPage />} />
+        <Route path="/methodology" element={<MethodologyPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -35,6 +35,11 @@ export default function Layout({ children }: LayoutProps) {
                 Goals
               </Link>
             </li>
+            <li>
+              <Link to="/methodology" className="text-slate-600 hover:text-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 rounded-md p-1">
+                Methodology
+              </Link>
+            </li>
           </ul>
         </nav>
       </header>
