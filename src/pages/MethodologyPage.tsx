@@ -8,10 +8,14 @@ export default function MethodologyPage() {
   return (
     <Layout>
       <div className="max-w-4xl mx-auto space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-950">Calculation Methodology & Transparency</h1>
-          <p className="text-slate-600 text-sm mt-1">
-            Understand how carbon emissions are estimated, the emission factors used, and the underlying data assumptions.
+        <div className="bg-gradient-to-r from-sky-50/60 via-white to-slate-50/50 border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <div className="inline-flex items-center space-x-2 bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+            <span>Transparent Science</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Calculation Methodology & Transparency</h1>
+          <p className="text-slate-600 text-sm mt-1 max-w-2xl">
+            Understand how carbon emissions are estimated, the versioned emission factors used, and the underlying data assumptions.
           </p>
         </div>
 

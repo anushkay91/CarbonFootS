@@ -11,15 +11,19 @@ export default function GoalsPage() {
 
   return (
     <Layout>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+      <div className="bg-gradient-to-r from-sky-50/60 via-white to-slate-50/50 border border-slate-200/80 rounded-2xl p-6 sm:p-8 mb-8 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-950">Carbon Reduction Goals</h1>
-          <p className="text-slate-600 text-sm mt-1">Track activity-linked reduction goals, baseline comparisons, and progress.</p>
+          <div className="inline-flex items-center space-x-2 bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+            <span>Target Reduction Engine</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Carbon Reduction Goals</h1>
+          <p className="text-slate-600 text-sm mt-1 max-w-xl">Track activity-linked reduction targets, baseline comparisons, and progress milestones.</p>
         </div>
-        <div className="mt-4 sm:mt-0">
+        <div className="flex-shrink-0">
           <Link
             to="/goals/new"
-            className="inline-flex items-center justify-center bg-sky-600 text-white font-medium py-2 px-4 rounded-md hover:bg-sky-700 shadow-sm text-sm"
+            className="inline-flex items-center justify-center bg-sky-600 text-white font-semibold py-2.5 px-5 rounded-xl hover:bg-sky-700 shadow-sm text-sm transition-all"
           >
             Create Goal
           </Link>

@@ -41,9 +41,13 @@ export default function DashboardPage() {
   if (records.length === 0) {
     return (
       <Layout>
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Personal Carbon Dashboard</h1>
-          <p className="text-slate-600 text-sm mt-1">Review your estimated footprint, track reduction goals, and explore scenarios.</p>
+        <div className="bg-gradient-to-r from-sky-50 to-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 mb-8 shadow-sm">
+          <div className="inline-flex items-center space-x-2 bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+            <span>Verified Impact Tracking</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Personal Carbon Dashboard</h1>
+          <p className="text-slate-600 text-sm mt-1 max-w-xl">Review your estimated footprint, track reduction goals, and explore scenarios.</p>
         </div>
         <EmptyState />
       </Layout>
@@ -52,12 +56,16 @@ export default function DashboardPage() {
 
   return (
     <Layout>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 pb-4 border-b border-slate-200">
+      <div className="bg-gradient-to-r from-sky-50 to-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 mb-8 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-950">Personal Carbon Dashboard</h1>
-          <p className="text-slate-600 text-sm mt-1">Estimated impact based on recorded transportation and electricity activities.</p>
+          <div className="inline-flex items-center space-x-2 bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+            <span>Verified Impact Tracking</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Personal Carbon Dashboard</h1>
+          <p className="text-slate-600 text-sm mt-1 max-w-xl">Review your estimated footprint, track reduction goals, and explore deterministic what-if scenarios.</p>
         </div>
-        <div className="mt-4 sm:mt-0">
+        <div className="flex-shrink-0">
           <PeriodSelector selectedDays={days} onSelectDays={setDays} />
         </div>
       </div>

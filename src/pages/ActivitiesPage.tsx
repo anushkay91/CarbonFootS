@@ -71,15 +71,19 @@ export default function ActivitiesPage() {
 
   return (
     <Layout>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+      <div className="bg-gradient-to-r from-sky-50/60 via-white to-slate-50/50 border border-slate-200/80 rounded-2xl p-6 sm:p-8 mb-8 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-950">Activity History</h1>
-          <p className="text-slate-600 text-sm mt-1">Manage, view, and inspect all recorded carbon activities.</p>
+          <div className="inline-flex items-center space-x-2 bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+            <span>Activity Records Ledger</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Activity History</h1>
+          <p className="text-slate-600 text-sm mt-1 max-w-xl">Manage, filter, and inspect all recorded carbon activities with transparent factor data.</p>
         </div>
-        <div className="mt-4 sm:mt-0">
+        <div className="flex-shrink-0">
           <Link
             to="/activities/new"
-            className="inline-flex items-center justify-center bg-sky-600 text-white font-medium py-2 px-4 rounded-md hover:bg-sky-700 shadow-sm text-sm"
+            className="inline-flex items-center justify-center bg-sky-600 text-white font-semibold py-2.5 px-5 rounded-xl hover:bg-sky-700 shadow-sm text-sm transition-all"
           >
             Add Activity
           </Link>
@@ -87,13 +91,13 @@ export default function ActivitiesPage() {
       </div>
 
       {/* Filter and Sort Bar */}
-      <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm mb-8 grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Category</label>
+          <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Category</label>
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-sky-500 focus:ring-sky-500"
+            className="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:border-sky-500 focus:ring-sky-500 shadow-2xs"
           >
             <option value="All">All Categories</option>
             <option value="Transportation">Transportation</option>
@@ -105,11 +109,11 @@ export default function ActivitiesPage() {
         </div>
 
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Date Range</label>
+          <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Date Range</label>
           <select
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-sky-500 focus:ring-sky-500"
+            className="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:border-sky-500 focus:ring-sky-500 shadow-2xs"
           >
             <option value="all">All Time</option>
             <option value="today">Today</option>
@@ -119,11 +123,11 @@ export default function ActivitiesPage() {
         </div>
 
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Sort By</label>
+          <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Sort By</label>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm bg-white focus:border-sky-500 focus:ring-sky-500"
+            className="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:border-sky-500 focus:ring-sky-500 shadow-2xs"
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
