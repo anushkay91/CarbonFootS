@@ -75,10 +75,14 @@ export interface TrackingSummary {
 }
 
 // Keep existing concrete activity types, but they now feed into ActivityRecord creation
-export interface Activity {
-  id: string;
-  type: 'Transportation' | 'Electricity' | 'Food' | 'Shopping' | 'Waste';
-  date: Date;
-  quality: DataQuality;
-  rawInput: any;
+export interface CalculationResult {
+  value: number; // Calculated CO2e
+  unit: 'kg CO2e';
+  category: string;
+  activityId: string;
+  factor: EmissionFactor;
+  assumptions: string[];
+  dataQuality: DataQuality;
 }
+
+// Core domain models for tracking and analysis are defined above.

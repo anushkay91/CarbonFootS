@@ -3,13 +3,20 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import Layout from './components/Layout';
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import DashboardPage from './pages/Dashboard';
+import ActivitiesPage from './pages/ActivitiesPage';
+import GoalsPage from './pages/GoalsPage';
 
 export default function App() {
   return (
-    <Layout>
-      <h1 className="text-3xl font-bold">Welcome to Carbon Tracker</h1>
-      <p className="mt-4 text-slate-600">Track your carbon footprint and reduce your environmental impact.</p>
-    </Layout>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<DashboardPage />} />
+        <Route path="/activities" element={<ActivitiesPage />} />
+        <Route path="/goals" element={<GoalsPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

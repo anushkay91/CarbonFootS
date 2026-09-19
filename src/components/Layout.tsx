@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -9,24 +10,24 @@ export default function Layout({ children }: LayoutProps) {
     <div className="flex flex-col min-h-screen bg-slate-50 text-slate-900">
       <header className="bg-white border-b border-slate-200">
         <nav aria-label="Main Navigation" className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <a href="/" className="text-xl font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 rounded-md p-1">
+          <Link to="/" className="text-xl font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 rounded-md p-1">
             Carbon Tracker
-          </a>
+          </Link>
           <ul className="flex space-x-6">
             <li>
-              <a href="/" className="text-slate-600 hover:text-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 rounded-md p-1">
+              <Link to="/" className="text-slate-600 hover:text-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 rounded-md p-1">
                 Dashboard
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/activities" className="text-slate-600 hover:text-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 rounded-md p-1">
+              <Link to="/activities" className="text-slate-600 hover:text-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 rounded-md p-1">
                 Activities
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/goals" className="text-slate-600 hover:text-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 rounded-md p-1">
+              <Link to="/goals" className="text-slate-600 hover:text-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 rounded-md p-1">
                 Goals
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>

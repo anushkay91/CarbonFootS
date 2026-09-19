@@ -1,4 +1,4 @@
-import { CalculationResult, DataQuality, Activity } from '../types/domain';
+import { CalculationResult, DataQuality } from '../types/domain';
 import { EMISSION_FACTORS } from '../data/emissionFactors';
 
 export class CarbonCalculationEngine {
