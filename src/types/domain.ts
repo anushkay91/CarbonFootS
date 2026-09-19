@@ -17,55 +17,68 @@ export interface EmissionFactor {
   uncertainty?: string;
 }
 
-export interface CalculationResult {
-  value: number; // Calculated CO2e
-  unit: string; // CO2e unit
-  category: string;
-  activityId: string;
-  factor: EmissionFactor;
-  assumptions: string[];
+export interface ActivityRecord {
+  id: string;
+  occurredAt: string; // ISO timestamp
+  localDate: string; // YYYY-MM-DD
+  category: 'Transportation' | 'Electricity' | 'Food' | 'Shopping' | 'Waste';
+  activityType: string;
+  inputs: Record<string, unknown>;
+  normalizedInputs: Record<string, unknown>;
+  estimatedCO2e: number;
+  unit: 'kg CO2e';
+  emissionFactorId?: string;
+  emissionFactorVersion?: string;
   dataQuality: DataQuality;
+  assumptions: string[];
+  source: 'manual' | 'bill' | 'appliance-estimate' | 'image-confirmed' | 'imported';
+  createdAt: string;
+  updatedAt: string;
 }
 
+export interface CarbonGoal {
+  id: string;
+  actionId: string;
+  title: string;
+  metric: 'count' | 'distance' | 'quantity' | 'frequency';
+  targetValue: number;
+  unit: string;
+  cadence: 'daily' | 'weekly' | 'monthly';
+  startDate: string;
+  endDate: string;
+  status: 'active' | 'completed' | 'skipped' | 'abandoned';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GoalCheckIn {
+  id: string;
+  goalId: string;
+  date: string;
+  value: number;
+  source: 'self-reported' | 'activity-derived';
+  note?: string;
+  createdAt: string;
+}
+
+export interface TrackingSummary {
+  periodStart: string;
+  periodEnd: string;
+  totalCO2e: number;
+  activityCount: number;
+  categoryTotals: Record<string, number>;
+  coverageDays: number;
+  categoriesRecorded: string[];
+  previousPeriodCO2e?: number;
+  percentageChange?: number;
+  largestReportedSource?: string;
+}
+
+// Keep existing concrete activity types, but they now feed into ActivityRecord creation
 export interface Activity {
   id: string;
   type: 'Transportation' | 'Electricity' | 'Food' | 'Shopping' | 'Waste';
   date: Date;
   quality: DataQuality;
   rawInput: any;
-}
-
-// Concrete activity types
-export interface TransportationActivity extends Activity {
-  type: 'Transportation';
-  vehicleCategory: string;
-  fuelType: string;
-  distanceKm: number;
-  frequency: number; // e.g., times per week
-}
-
-export interface ElectricityActivity extends Activity {
-  type: 'Electricity';
-  kwh: number;
-  source: 'Bill' | 'ApplianceEstimate';
-}
-
-export interface FoodActivity extends Activity {
-  type: 'Food';
-  category: 'Red meat' | 'Chicken' | 'Fish' | 'Eggs' | 'Dairy' | 'Plant-based';
-  frequency: 'Never' | 'Occasionally' | '1-2 times/week' | '3-5 times/week' | 'Daily';
-}
-
-export interface ShoppingActivity extends Activity {
-  type: 'Shopping';
-  category: 'Clothing' | 'Footwear' | 'Electronics' | 'Furniture' | 'Personal care' | 'Household goods';
-  quantity: number;
-  frequency: 'Monthly' | 'Quarterly' | 'Yearly';
-}
-
-export interface WasteActivity extends Activity {
-  type: 'Waste';
-  category: 'Plastic' | 'Paper' | 'Glass' | 'Metal' | 'Organic';
-  frequency: 'Daily' | 'Weekly';
-  recyclingBehavior: 'Always' | 'Sometimes' | 'Never';
 }
