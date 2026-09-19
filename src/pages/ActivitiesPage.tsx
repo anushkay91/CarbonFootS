@@ -1,13 +1,17 @@
 import React, { useMemo } from 'react';
 import Layout from '../components/Layout';
 import { ActivityRepository } from '../services/ActivityRepository';
+import { Link } from 'react-router-dom';
 
 export default function ActivitiesPage() {
   const records = useMemo(() => ActivityRepository.getAll(), []);
 
   return (
     <Layout>
-      <h1 className="text-3xl font-bold mb-6">Activity History</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Activity History</h1>
+        <Link to="/activities/new" className="bg-sky-600 text-white py-2 px-4 rounded-md hover:bg-sky-700">Add Activity</Link>
+      </div>
       
       {records.length === 0 ? (
         <div className="text-center py-10 bg-white rounded-lg border border-slate-200">
