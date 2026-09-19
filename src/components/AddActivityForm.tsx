@@ -3,7 +3,6 @@ import { CarbonCalculator } from '../services/carbonCalculator';
 import { ActivityRepository } from '../services/ActivityRepository';
 import { DataQuality } from '../types/domain';
 import { useNavigate } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
 
 export default function AddActivityForm() {
   const navigate = useNavigate();
@@ -22,7 +21,7 @@ export default function AddActivityForm() {
       const result = CarbonCalculator.calculateTransportation(distanceKm, 'trans-car-petrol', dataQuality);
 
       ActivityRepository.save({
-        id: uuidv4(),
+        id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2) + Date.now().toString(36),
         occurredAt: new Date(date).toISOString(),
         localDate: date,
         category: 'Transportation',

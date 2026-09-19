@@ -61,6 +61,23 @@ export interface GoalCheckIn {
   createdAt: string;
 }
 
+export type ComparabilityStatus = 'comparable' | 'not-comparable' | 'no-previous-data';
+
+export interface DailyDataItem {
+  date: string;
+  totalCO2e: number | null;
+  activityCount: number;
+  hasData: boolean;
+}
+
+export interface PeriodComparison {
+  currentTotal: number;
+  previousTotal: number | null;
+  absoluteDifference: number | null;
+  percentageChange: number | null;
+  status: ComparabilityStatus;
+}
+
 export interface TrackingSummary {
   periodStart: string;
   periodEnd: string;
@@ -68,10 +85,15 @@ export interface TrackingSummary {
   activityCount: number;
   categoryTotals: Record<string, number>;
   coverageDays: number;
+  periodDays: number;
+  coverageRatio: number;
+  hasData: boolean;
   categoriesRecorded: string[];
-  previousPeriodCO2e?: number;
-  percentageChange?: number;
   largestReportedSource?: string;
+  dailyBreakdown: DailyDataItem[];
+  comparison?: PeriodComparison;
+  previousPeriodStart?: string;
+  previousPeriodEnd?: string;
 }
 
 // Keep existing concrete activity types, but they now feed into ActivityRecord creation
